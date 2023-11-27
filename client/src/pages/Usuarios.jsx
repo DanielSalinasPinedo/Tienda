@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useUsuarios } from '../context/UsuarioProvider.jsx'
 import { useNavigate } from 'react-router-dom'
-import * as jwt from 'jwt-decode';
 
 
 const Usuarios = () => {

@@ -10,7 +10,6 @@ import Navbar from './components/Navbar'
 import { UsuarioContextProvider, useUsuarios } from './context/UsuarioProvider'
 import Login from './pages/Login'
 import { rol } from './services/auth.js'
-import * as jwt from 'jwt-decode';
 import Productos from './pages/Productos.jsx'
 import { ProductContextProvider } from './context/ProductProvider.jsx'
 import FormProducto from './pages/FormProducto.jsx'
