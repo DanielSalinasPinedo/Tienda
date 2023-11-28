@@ -2,7 +2,6 @@ import { config } from "dotenv";
 
 config()
 
-export const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"
 export const PORT  = process.env.PORT || 3005
 export const DB_DATABASE = process.env.DB_DATABASE || 'data'
 export const DB_USER = process.env.DB_USER || 'root'
