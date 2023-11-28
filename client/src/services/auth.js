@@ -6,7 +6,7 @@ const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3005"
 
 export const LoginRequest = async (values) => {
     try {
-        const response = await axios.post(`${URL}api/login`, values);
+        const response = await axios.post(`${URL}/api/login`, values);
         return response;
     } catch (error) {
         throw error;
@@ -14,7 +14,7 @@ export const LoginRequest = async (values) => {
   };
   
 
-export const TokenRequest = async (tokenCookie) => await axios.post(`${URL}api/auth`, {tokenCookie});
+export const TokenRequest = async (tokenCookie) => await axios.post(`${URL}/api/auth`, {tokenCookie});
 
 export const logout = () => {
     Cookies.remove('token');
