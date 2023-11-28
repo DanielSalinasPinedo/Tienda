@@ -23,6 +23,8 @@ const Login = () => {
                             onSubmit={async(values,actions)=>{
                                 var a = await login(values)
                                 setErrors(a)
+                                if(!a)
+                                    window.location.reload()
                             }}
                         >
                             {({handleChange, handleSubmit, values, isSubmitting})=>(
