@@ -43,6 +43,7 @@ function AppContent() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<FormUsuario />} />
+          <Route path='/products' element={<Productos />} />
           {(() => {
             if (auth){
               if(rol(token) === 'admin') {
