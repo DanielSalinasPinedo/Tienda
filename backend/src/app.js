@@ -5,10 +5,13 @@ import usuariosRoutes from './routes/usuarios.router.js'
 import indexRoutes from './routes/index.routes.js'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
+import { FRONTEND_URL } from "./config.js";
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: FRONTEND_URL
+}))
 app.use(express.json())
 app.use(cookieParser())
 
