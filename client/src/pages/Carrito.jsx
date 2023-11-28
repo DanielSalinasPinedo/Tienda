@@ -95,7 +95,7 @@ const Carrito = () => {
             
             // Obtener el stock del producto correspondiente
             const stockProducto = productos
-                .filter((product) => codigoProducto === decodet.codigo)
+                .filter((product) => codigoProducto === codigo)
                 .map((product) => product.stock)[0];
             
             // Verificar si la cantidad vendida es menor al stock
@@ -122,6 +122,8 @@ const Carrito = () => {
                 return producto
             }
         });
+
+        console.log(nuevoCarrito)
         
         setCarrito(nuevoCarrito);
 

@@ -43,7 +43,6 @@ function AppContent() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<FormUsuario />} />
-          <Route path='/products' element={<Productos />} />
           {(() => {
             if (auth){
               if(rol(token) === 'admin') {
@@ -54,9 +53,9 @@ function AppContent() {
                   <>
                     <Route path='/usuarios' element={<Usuarios />} />
                     <Route path='/products' element={<Productos />} />
-                    <Route path='usuarios/editar/:id' element={<FormUsuario />} />
-                    <Route path='products/editar/:id' element={<FormProducto />} />
-                    <Route path='products/create' element={<FormProducto />} />
+                    <Route path='/usuarios/editar/:id' element={<FormUsuario />} />
+                    <Route path='/products/editar/:id' element={<FormProducto />} />
+                    <Route path='/products/create' element={<FormProducto />} />
                   </>
                 );
               }
@@ -67,8 +66,8 @@ function AppContent() {
                 return (
                   <>
                     <Route path='/products' element={<Productos />} />
-                    <Route path='products/create' element={<FormProducto />} />
-                    <Route path='products/editar/:id' element={<FormProducto />} />
+                    <Route path='/products/create' element={<FormProducto />} />
+                    <Route path='/products/editar/:id' element={<FormProducto />} />
                   </>
                 );
               }
