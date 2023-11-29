@@ -64,7 +64,9 @@ const Tienda = () => {
     return (
         <div className='container mt-3'>
             <div className='row mb-3'>
-                {productos.map((producto, index)=>(
+                {productos
+                .filter(producto => producto.stock > 0)
+                .map((producto, index)=>(
                     <div key={index} className='col-3'>
                         <div className='card mb-4 shadow zoom-on-hover'>
                             <div className='card-header d-flex justify-content-between'>

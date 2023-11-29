@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useUsuarios } from '../context/UsuarioProvider.jsx'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 
 const Usuarios = () => {
@@ -11,6 +12,36 @@ const Usuarios = () => {
   useEffect(()=>{
     obtenerUsuarios()
   },[])
+
+  const eliminar = (codigo) =>{
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, estoy seguro'
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        var err = await deleteUsuario(codigo)
+        if(!err){
+          Swal.fire(
+            '¡Eliminado!',
+            'El usuario ha sido eliminado exitosamente.',
+            'success'
+          );
+        }
+        else{
+          Swal.fire(
+            '¡No se pudo eliminar!',
+            err,
+            'error'
+          );
+        }
+      }
+    });
+  }
 
   return (
     <div className='container'>
@@ -31,7 +62,7 @@ const Usuarios = () => {
               <td>{usuario.rol}</td>
               <td>
                 <button onClick={()=>navigate(`./editar/${usuario.codigo}`)} className='btn btn-outline-primary me-2' type="button">Edit</button>
-                <button onClick={()=>deleteUsuario(usuario.codigo)} className='btn btn-outline-danger me-2' type="button">Delete</button>
+                <button onClick={()=>eliminar(usuario.codigo)} className='btn btn-outline-danger me-2' type="button">Delete</button>
               </td>
             </tr>
           ))}

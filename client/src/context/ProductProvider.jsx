@@ -25,7 +25,9 @@ export const ProductContextProvider = ({children})=>{
           const response = await DeleteProductoRequest(id)
           setProductos(productos.filter(producto => producto.codigo !== id))
         } catch (error) {
-          console.log(error)
+            if(error.response.status == '500'){
+                return "No se pudo eliminar el producto, ya que tiene una o mas ventas"
+            }
         }
     }
 

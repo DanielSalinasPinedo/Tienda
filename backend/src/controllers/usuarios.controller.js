@@ -120,6 +120,6 @@ export const deleteUsuario = async(req, res) => {
         })
         res.send(204)
     } catch (error) {
-        return res.status(500).json({message: error.message})
+        return res.status(500).json({message: error.message + ' no se puede eliminar'})
     }
 }

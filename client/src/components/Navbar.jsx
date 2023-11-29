@@ -28,7 +28,7 @@ const Navbar = () => {
             {rol(token) === 'asesor' && (
               <>
                 <Link className='btn btn-dark' to='/products'>Productos</Link>
-                <Link className='btn btn-dark' to='/create'>Crear Producto</Link>
+                <Link className='btn btn-dark' to='/products/create'>Crear Producto</Link>
               </>
             )}
             {rol(token) === 'cliente' && (

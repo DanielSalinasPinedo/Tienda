@@ -1,12 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { useProductos } from '../context/ProductProvider.jsx'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 
 const Producto = () => {
   const {productos, setProductos, obtenerProductos, deleteProducto} = useProductos()
 
   const navigate = useNavigate()
+
+  const eliminar = (codigo) =>{
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, estoy seguro'
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        var err = await deleteProducto(codigo)
+        if(!err){
+          Swal.fire(
+            '¡Eliminado!',
+            'El producto ha sido eliminado exitosamente.',
+            'success'
+          );
+        }
+        else{
+          Swal.fire(
+            '¡No se pudo eliminar!',
+            err,
+            'error'
+          );
+        }
+      }
+    });
+  }
 
   useEffect(()=>{
     obtenerProductos()
@@ -33,7 +64,7 @@ const Producto = () => {
               <td>{producto.stock}</td>
               <td>
                 <button onClick={()=>navigate(`./editar/${producto.codigo}`)} className='btn btn-outline-primary me-2' type="button">Edit</button>
-                <button onClick={()=>deleteUsuario(producto.codigo)} className='btn btn-outline-danger me-2' type="button">Delete</button>
+                <button onClick={()=>eliminar(producto.codigo)} className='btn btn-outline-danger me-2' type="button">Delete</button>
               </td>
             </tr>
           ))}

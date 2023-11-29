@@ -26,62 +26,99 @@ const Carrito = () => {
         return carrito ? JSON.parse(carrito) : [];
     })
 
-    const handleToButton = async() => {
-        carrito.map((producto)=>{
-            crearVenta(producto)
-            localStorage.setItem('carrito', []);
-            Swal.fire({
+    const handleToButton = async () => {
+        const confirmPurchase = await Swal.fire({
+            title: '¿Estás seguro de realizar la compra?',
+            text: 'Esta acción no se puede deshacer',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, estoy seguro',
+            allowOutsideClick: false,
+        });
+    
+        if (confirmPurchase.isConfirmed) {
+            // Realizar la compra
+            carrito.forEach((producto) => {
+                crearVenta(producto);
+            });
+    
+            // Limpiar el carrito después de la compra
+            localStorage.setItem('carrito', JSON.stringify([]));
+    
+            // Mostrar un SweetAlert de éxito
+            await Swal.fire({
+                title: 'Compra realizada con éxito',
+                text: '¡Gracias por tu compra!',
                 icon: 'success',
-                title: 'Producto comprado',
-                text: 'El producto ha sido comprado con exitosamente',
                 confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK',
                 allowOutsideClick: false,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate("/tienda")
-                }
-            })
-        })
-    }
+            });
+    
+            // Redirigir a la página de tienda
+            navigate('/tienda');
+        }
+    };
+    
 
-    const decrementarCantidad = (codigo)=>{
-        const precioProducto = productos.map((product)=>
-            codigo == product.codigo ?
-                product.precio : 0
+    const decrementarCantidad = async (codigo) => {
+        const precioProducto = productos.map((product) =>
+            codigo == product.codigo ? product.precio : 0
         ).filter((precio) => precio !== 0);
-        
-        const nuevoCarrito = carrito.map((producto) => {
-            const codigoProducto = producto.codigo_producto;
-            const cantidadVendida = producto.cantidad_vendida;            
+    
+        const nuevoCarrito = await Promise.all(carrito.map(async (producto) => {
+            const codigoProducto =  producto.codigo_producto
+            const cantidadVendida = producto.cantidad_vendida;
             
-            if (cantidadVendida > 1) {
-                if(codigoProducto == codigo){
-                    return {
-                        ...producto,
-                        cantidad_vendida: cantidadVendida - 1,
-                        total_venta: (cantidadVendida - 1) * precioProducto,
-                    };
-                }
-                else{
-                    Swal.fire({
+            console.log(codigoProducto, codigo)
+            console.log(codigoProducto === codigo)
+            console.log(cantidadVendida)
+
+            if (codigoProducto === codigo) {
+                if (cantidadVendida > 1) {                    
+                        return {
+                            ...producto,
+                            cantidad_vendida: cantidadVendida - 1,
+                            total_venta: (cantidadVendida - 1) * precioProducto,
+                        };
+                    
+                } else {
+                    const result = await Swal.fire({
+                        title: '¿Desear eliminar el producto del carrito?',
+                        text: 'Esta acción eliminará el producto del carrito',
                         icon: 'warning',
-                        title: 'Error',
-                        text: 'ERROR',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, estoy seguro',
                         allowOutsideClick: false,
                     });
-                }
-            } else {        
-                if(producto.codigo_producto != codigo){
-                    return producto
+        
+                    if (result.isConfirmed) {
+                        if (producto.codigo_producto != codigo) {
+                            return producto;
+                        } else {
+                            return null; // Eliminar el producto del carrito
+                        }
+                    } else {
+                        throw new Error('Operación cancelada por el usuario'); // Lanzar un error si la operación es cancelada
+                    }
                 }
             }
-        }).filter((producto) => producto != null)
-        
-        setCarrito(nuevoCarrito);
-
-        localStorage.setItem('carrito', JSON.stringify(nuevoCarrito));
-    }
+            else{
+                return{
+                    ...producto
+                }
+            }
+        }));
+    
+        const carritoFiltrado = nuevoCarrito.filter((producto) => producto !== null);
+    
+        setCarrito(carritoFiltrado);
+        localStorage.setItem('carrito', JSON.stringify(carritoFiltrado));
+    };
+    
 
     const incrementarCantidad = (codigo)=>{
         const precioProducto = productos.map((product)=>
@@ -95,8 +132,10 @@ const Carrito = () => {
             
             // Obtener el stock del producto correspondiente
             const stockProducto = productos
-                .filter((product) => codigoProducto === codigo)
+                .filter((product) => product.codigo === codigo)
                 .map((product) => product.stock)[0];
+
+            console.log(stockProducto)
             
             // Verificar si la cantidad vendida es menor al stock
             if (codigoProducto === codigo) {

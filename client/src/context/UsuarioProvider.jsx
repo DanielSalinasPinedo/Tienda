@@ -30,7 +30,9 @@ export const UsuarioContextProvider = ({children})=>{
           const response = await DeleteUsuarioRequest(id)
           setUsuarios(usuarios.filter(usuario=>usuario.codigo !== id))
         } catch (error) {
-          console.log(error)
+            if(error.response.status == '500'){
+                return "No se pudo eliminar al usuario, ya que tiene una o mas ventas"
+            }
         }
     }
 
