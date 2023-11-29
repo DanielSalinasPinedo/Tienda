@@ -70,10 +70,6 @@ const Carrito = () => {
         const nuevoCarrito = await Promise.all(carrito.map(async (producto) => {
             const codigoProducto =  producto.codigo_producto
             const cantidadVendida = producto.cantidad_vendida;
-            
-            console.log(codigoProducto, codigo)
-            console.log(codigoProducto === codigo)
-            console.log(cantidadVendida)
 
             if (codigoProducto === codigo) {
                 if (cantidadVendida > 1) {                    
@@ -134,8 +130,6 @@ const Carrito = () => {
             const stockProducto = productos
                 .filter((product) => product.codigo === codigo)
                 .map((product) => product.stock)[0];
-
-            console.log(stockProducto)
             
             // Verificar si la cantidad vendida es menor al stock
             if (codigoProducto === codigo) {
@@ -161,8 +155,6 @@ const Carrito = () => {
                 return producto
             }
         });
-
-        console.log(nuevoCarrito)
         
         setCarrito(nuevoCarrito);
 
