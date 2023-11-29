@@ -5,6 +5,7 @@ import { useUsuarios } from '../context/UsuarioProvider.jsx'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { rol } from '../services/auth.js';
+import Swal from 'sweetalert2';
 
 const FormUsuario = () => {
     const navigate = useNavigate()
@@ -48,16 +49,28 @@ const FormUsuario = () => {
                 enableReinitialize={true}
                 validationSchema={validationSchema}
                 onSubmit={async(values,actions)=>{
-                    if(id){
-                        if(await actualizarUsuario(id,values))
-                            navigate("/usuarios")
-                    }
-                    else{
-                        var err = await crearUsuario(values)
-                        setErrors(err)
-                        if(!err)
-                            navigate("/")
-                    }
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: id ? 'Editaras el usuario': 'Crearas el usuario',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, estoy seguro'
+                    }).then(async(result) => {
+                        if (result.isConfirmed) {
+                            if(id){
+                                if(await actualizarUsuario(id,values))
+                                    navigate("/usuarios")
+                            }
+                            else{
+                                var err = await crearUsuario(values)
+                                setErrors(err)
+                                if(!err)
+                                    navigate("/")
+                            }
+                        }
+                    })
                 }}
             >
                 {({handleChange, handleSubmit, values, isSubmitting})=>(

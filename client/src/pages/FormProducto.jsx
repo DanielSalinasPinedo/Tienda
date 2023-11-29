@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { rol } from '../services/auth.js';
 import { useUsuarios } from '../context/UsuarioProvider.jsx';
+import Swal from 'sweetalert2';
 
 const FormProducto = () => {
     const navigate = useNavigate()
@@ -51,16 +52,28 @@ const FormProducto = () => {
                 enableReinitialize={true}
                 validationSchema={validationSchema}
                 onSubmit={async(values,actions)=>{
-                    if(id){
-                        if(await actualizarProducto(id,values))
-                            navigate("/products")
-                    }
-                    else{
-                        var err = await crearProducto(values)
-                        setErrors(err)
-                        if(!err)
-                            navigate("/products")
-                    }
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: id ? 'Editaras el producto': 'Crearas el producto',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, estoy seguro'
+                      }).then(async(result) => {
+                        if (result.isConfirmed) {
+                            if(id){
+                                if(await actualizarProducto(id,values))
+                                    navigate("/products")
+                            }
+                            else{
+                                var err = await crearProducto(values)
+                                setErrors(err)
+                                if(!err)
+                                    navigate("/products")
+                            }
+                        }
+                      })
                 }}
             >
                 {({handleChange, handleSubmit, values, isSubmitting})=>(
